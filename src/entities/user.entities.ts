@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
@@ -10,17 +10,18 @@ export class User {
     @Column({length: 255})
     password: string; //密码
 
-    @Column({length: 255})
-    phone: string; //手机号
+    @Column({length: 255, nullable: true})
+    phone: string | null; //手机号
 
-    @Column({length: 100})
-    email: string; //邮箱
+    @Index()
+    @Column({length: 100, nullable: true})
+    email: string | null; //邮箱
 
-    @Column({ length: 10})
-    gender: string; //性别
+    @Column({ length: 10, nullable: true})
+    gender: string | null; //性别
 
-    @Column({ length: 255})
-    avatar: string; //头像
+    @Column({ length: 255, nullable: true})
+    avatar: string | null; //头像
 
     @CreateDateColumn({ name: 'create_at'})
     createAt: Date; //创建时间
