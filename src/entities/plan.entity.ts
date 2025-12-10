@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'plan'})
 export class Plan {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: 'bigint'})
     id: number; //主键id
 
     @Column({ length: 100 })

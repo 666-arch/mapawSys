@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 @Entity({ name: 'user'})
 export class User {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: 'bigint'})
     id: number; //用户主键id
     
     @Column({length: 50})
