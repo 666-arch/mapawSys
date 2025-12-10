@@ -13,9 +13,6 @@ export class DailyPlan {
     @Column({ length: 50, nullable: true })
     weather: string | null; //天气状况 
 
-    @Column({ type: 'int', nullable: true })
-    budget: number | null; //预算
-
     @Column({ length: 50, nullable: true })
     transport: string | null; //交通方式
 
