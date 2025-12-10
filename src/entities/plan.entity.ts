@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
+import { City } from "./city.entity";
 
 @Entity({ name: 'tb_plan' })
 export class Plan {
@@ -7,7 +8,10 @@ export class Plan {
     id: number; //主键id
 
     @ManyToOne(() => User, u => u.plans, { nullable: false, onDelete: 'CASCADE' })
-    user: User; //多个Plan对应一个用户
+    user: User; 
+
+    @ManyToOne(() => City, u => u.plans, { nullable: false, onDelete: 'CASCADE' })
+    city: City; 
 
     @Column({ length: 100 })
     title: string; //攻略大标题
