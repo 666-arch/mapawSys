@@ -1,7 +1,7 @@
 import { Column, PrimaryGeneratedColumn } from "typeorm";
 
 export class DailyPlanItem {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
 
     @Column({ length: 255 })
