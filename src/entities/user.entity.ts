@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Plan } from "./plan.entity";
-@Entity({ name: 'user' })
+@Entity({ name: 'tb_user' })
 export class User {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number; //用户主键id

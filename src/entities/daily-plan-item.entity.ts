@@ -1,5 +1,6 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity({ name: 'tb_daily_plan_item'})
 export class DailyPlanItem {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;

@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
-@Entity({ name: 'plan' })
+@Entity({ name: 'tb_plan' })
 export class Plan {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number; //主键id
