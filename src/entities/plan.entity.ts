@@ -16,6 +16,9 @@ export class Plan {
     @Column({ length: 100 })
     title: string; //攻略大标题
 
+    @Column({ length: 20, nullable: true })
+    travelType: string | true; // couple / family / solo
+
     @Column({ type: 'int' })
     days: number; //天数
 
