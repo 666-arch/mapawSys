@@ -1,10 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { BaseContent } from "./base/base-entity";
 
 @Entity({ name: 'tb_daily_plan'})
-export class DailyPlan {
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    id: number;
-
+export class DailyPlan extends BaseContent {
     @Column({ length: 100, nullable: true })
     title: string | null; //标题
 
@@ -16,10 +14,4 @@ export class DailyPlan {
 
     @Column({ length: 50, nullable: true })
     transport: string | null; //交通方式
-
-    @Column({ name: 'create_at' })
-    createAt: Date;
-
-    @Column({ name: 'update_at' })
-    updateAt: Date;
 }

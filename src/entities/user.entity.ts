@@ -1,18 +1,14 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   Index,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BaseContent } from './base/base-entity';
 import { Plan } from './plan.entity';
 import { UserFavorite } from './user-favorite.entity';
 @Entity({ name: 'tb_user' })
-export class User {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
-  id: number; //用户主键id
-
+export class User extends BaseContent {
   @OneToMany(() => Plan, (plan) => plan.user)
   plans: Plan[]; //一个用户可以有多个 Plan
 
@@ -37,10 +33,4 @@ export class User {
 
   @Column({ length: 255, nullable: true })
   avatar: string | null; //头像
-
-  @CreateDateColumn({ name: 'create_at' })
-  createAt: Date; //创建时间
-
-  @CreateDateColumn({ name: 'update_at' })
-  updateAt: Date; //修改时间
 }

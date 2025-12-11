@@ -1,10 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { BaseContent } from "./base/base-entity";
 
 @Entity({ name: 'tb_daily_plan_item'})
-export class DailyPlanItem {
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    id: number;
-
+export class DailyPlanItem extends BaseContent {
     @Column({ length: 255 })
     place: string;
 
@@ -16,10 +14,4 @@ export class DailyPlanItem {
     
     @Column({ name: 'end_time'})
     endTime: Date;
-
-    @Column({ name: 'create_at'})
-    createAt: Date;
-
-    @Column({ name: 'update_at'})
-    updateAt: Date;
 }
