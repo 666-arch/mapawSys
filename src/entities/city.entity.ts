@@ -10,7 +10,7 @@ export class City {
     plans: Plan[]; //一个城市可以有多个不同的计划
 
     @Column({ length: 50 })
-    name: string; //城市名称
+    name: string; //城市名称 
 
     @Column({ length: 50 })
     country: string; //国家
