@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseContent } from './base/base-entity';
+import { DailyPlanItem } from './daily-plan-item.entity';
 import { DailyPlan } from './daily-plan.entity';
 import { UserFavorite } from './user-favorite.entity';
 
@@ -36,6 +37,9 @@ export class Poi extends BaseContent {
 
   @OneToMany(() => DailyPlan, dp => dp)
   dailyPlan: DailyPlan[]; //一个地点存在多个日常计划中
+
+  @OneToMany(() => DailyPlanItem, (item) => item.refPoi)
+  referencedByItems: DailyPlanItem[];
 
   @OneToMany(() => UserFavorite, fav => fav.poi)
   favorite: UserFavorite[]; //一个地点被多个用户收藏
