@@ -22,7 +22,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [__dirname + '/**/*.entities{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        cli: {
+            entitiesDir: "entity",
+        },
         synchronize: config.get<string>('NODE_ENV') === 'development',
         connectorPackage: 'mysql2',
         // 开启SQL日志
