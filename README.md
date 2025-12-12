@@ -1,8 +1,11 @@
 ## Description
 
-[Mapaw](https://github.com/nestjs/nest)Your AI travel and adventure partner.
+[Mapaw] Your AI travel and adventure partner.
 
 CORE by: [Nest](https://github.com/nestjs/nest)
+
+## dev 环境下使用
+synchronize 来启用自动同步生成表
 ## Installation
 
 ```bash
