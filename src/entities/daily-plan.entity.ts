@@ -1,4 +1,4 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import { BaseContent } from "./base/base-entity";
 
 @Entity({ name: 'tb_daily_plan'})
@@ -14,4 +14,7 @@ export class DailyPlan extends BaseContent {
 
     @Column({ length: 50, nullable: true })
     transport: string | null; //交通方式
+
+    @ManyToOne(()=> DailyPlan, dp => dp.dailyPlan, { nullable: false, onDelete: 'CASCADE'})
+    dailyPlan: DailyPlan;
 }
