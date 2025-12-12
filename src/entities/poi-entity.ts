@@ -35,11 +35,11 @@ export class Poi extends BaseContent {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @OneToMany(() => DailyPlan, dp => dp)
+  @OneToMany(() => DailyPlan, dp => dp.dailyPlan)
   dailyPlan: DailyPlan[]; //一个地点存在多个日常计划中
 
-  @OneToMany(() => DailyPlanItem, (item) => item.refPoi)
-  referencedByItems: DailyPlanItem[];
+  @OneToMany(() => DailyPlanItem, (item) => item.poi)
+  dpItem: DailyPlanItem[];
 
   @OneToMany(() => UserFavorite, fav => fav.poi)
   favorite: UserFavorite[]; //一个地点被多个用户收藏

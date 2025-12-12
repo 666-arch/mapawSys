@@ -14,17 +14,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({ //env
+      useFactory: (config: ConfigService) => ({
+        //env
         type: 'mysql',
         host: config.get<string>('DB_HOST'),
         port: config.get<number>('DB_PORT'),
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [],
+        entities: [__dirname + '/**/*.entities{.ts,.js}'],
         synchronize: config.get<string>('NODE_ENV') === 'development',
         connectorPackage: 'mysql2',
-        //production环境可额外配置 
+        // 开启SQL日志
+        logging: config.get<string>('NODE_ENV') === 'development',
+        logger: 'advanced-console', // 详细的SQL日志
+        //production环境可额外配置
       }),
     }),
   ],
