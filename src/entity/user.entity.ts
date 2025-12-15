@@ -7,6 +7,7 @@ import {
 import { BaseContent } from './base/base-entity';
 import { Plan } from './plan.entity';
 import { UserFavorite } from './user-favorite.entity';
+import { RefreshToken } from './refresh-token.entity';
 @Entity({ name: 'tb_user' })
 export class User extends BaseContent {
   @OneToMany(() => Plan, (plan) => plan.user)
@@ -14,6 +15,9 @@ export class User extends BaseContent {
 
   @OneToMany(() => UserFavorite, (fav) => fav.user)
   favorites: UserFavorite[]; //一个用户可以收藏多个
+
+  @OneToMany(() => RefreshToken, (refToken) => refToken.user)
+  refreshToken: RefreshToken[];
 
   @Column({ length: 50 })
   username: string; //用户名
@@ -33,4 +37,7 @@ export class User extends BaseContent {
 
   @Column({ length: 255, nullable: true })
   avatar: string | null; //头像
+
+  @Column({ name: 'last_login_time', type: 'datetime' })
+  lastLoginTime: Date; //用户最近一次登录时间
 }
