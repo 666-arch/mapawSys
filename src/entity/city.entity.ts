@@ -1,16 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
+import { BaseContent } from "./base/base-entity";
 import { Plan } from "./plan.entity";
 
 @Entity({ name: 'tb_cities' })
-export class City {
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    id: number;
-
+export class City extends BaseContent{
     @OneToMany(() => Plan, plan => plan.city)
     plans: Plan[]; //一个城市可以有多个不同的计划
 
     @Column({ length: 50 })
-    name: string; //城市名称
+    name: string; //城市名称 
 
     @Column({ length: 50 })
     country: string; //国家
@@ -26,10 +24,4 @@ export class City {
   
     @Column({ type: 'decimal', precision: 10, scale: 6, nullable: true })
     lng: number | null; //经度
-
-    @Column({ name: 'create_at' })
-    createAt: Date;
-
-    @Column({ name: 'update_at' })
-    updateAt: Date;
 }

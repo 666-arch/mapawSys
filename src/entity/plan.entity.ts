@@ -1,12 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import { User } from "./user.entity";
 import { City } from "./city.entity";
+import { BaseContent } from "./base/base-entity";
 
 @Entity({ name: 'tb_plan' })
-export class Plan {
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    id: number; //主键id
-
+export class Plan extends BaseContent{
     @ManyToOne(() => User, u => u.plans, { nullable: false, onDelete: 'CASCADE' })
     user: User; 
 
@@ -33,10 +31,4 @@ export class Plan {
 
     @Column({ type: 'text', nullable: true })
     summary: string | null; //文本摘要（可能来自AI）
-
-    @Column({ name: 'create_at' })
-    createAt: Date;
-
-    @Column({ name: 'update_at' })
-    updateAt: Date;
 }
