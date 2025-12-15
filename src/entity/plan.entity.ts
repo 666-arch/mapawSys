@@ -3,6 +3,12 @@ import { User } from "./user.entity";
 import { City } from "./city.entity";
 import { BaseContent } from "./base/base-entity";
 
+export enum TravelType {
+    COUPLE = 'couple',
+    FAMILY = 'family',
+    SOLO = 'solo'
+}
+
 @Entity({ name: 'tb_plan' })
 export class Plan extends BaseContent{
     @ManyToOne(() => User, u => u.plans, { nullable: false, onDelete: 'CASCADE' })
@@ -14,8 +20,8 @@ export class Plan extends BaseContent{
     @Column({ length: 100 })
     title: string; //攻略大标题
 
-    @Column({ length: 20, nullable: true })
-    travelType: string | true; // couple / family / solo
+    @Column({ type: 'enum', enum: TravelType, nullable: true })
+    travelType: TravelType | null; // couple / family / solo
 
     @Column({ type: 'int' })
     days: number; //天数
