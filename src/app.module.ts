@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UserService } from './user/user.service';
         //production环境可额外配置
       }),
     }),
+    UserModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
