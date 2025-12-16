@@ -13,6 +13,12 @@ export class RefreshToken extends BaseContent {
     @Column({ length: 500 })
     token: string; //token
 
+    @Column({ type: 'bool', default: false })
+    isRevoked: boolean; //是否已撤销
+
+    @Column({ nullable: true })
+    replacedByToken: string | null;
+
     @Column({ name: 'expires_at', type: 'datetime' })
     expiresAt: Date; //token 过期时间
 
