@@ -7,4 +7,4 @@ import { AuthGuard } from '@nestjs/passport';
  * 它只是一个触发器，通知 nest 接口需要通过何种 Strategy 来鉴权
  */
 @Injectable()
-export class RefreshAuthGuard extends AuthGuard() {}
+export class RefreshAuthGuard extends AuthGuard('jwt-refresh') {}

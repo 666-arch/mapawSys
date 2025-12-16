@@ -5,9 +5,9 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 
 @Injectable()
 /**
- * 验证token可信度 （短期）
+ * AccessToken校验 业务API大门
  */
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(config: ConfigService) {
         super({
             //验证token从何而来，会自动去找 Authorization: Bearer xxx

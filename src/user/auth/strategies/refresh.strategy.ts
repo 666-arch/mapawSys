@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { AuthService } from "../auth.service";
 
 /**
- * 长期 token 需要入库
+ *  RefresgToken校验 只服务 /auth/refresh
  * 'jwt-refresh' 定义 passport Strategy 的名称
  */
 @Injectable()
