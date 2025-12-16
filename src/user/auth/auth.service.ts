@@ -4,9 +4,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { RefreshToken } from "src/entity/refresh-token.entity";
 import { User } from "src/entity/user.entity";
 import { Repository } from "typeorm";
-import bcrypt from 'bcrypt'
-import { LoginDto } from "src/dto/user/login.dto";
 import { Redis } from "ioredis";
+import { UserDto } from "src/dto/user/user.dto";
+import bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
@@ -24,11 +24,27 @@ export class AuthService {
     ) { }
 
     /**
-     * 登录
+     * 密码登录
      */
+    async LoginByPassowd(user: UserDto) {
+        if (!user) throw new UnauthorizedException('错误调用，数据对象为空')
+        const _user = await this.validateByPassowrd(user.phone, user.password)
+        const accessToken = this.generateAccessToken(user);
+        return {
+            accessToken,
+            user: {
+                id: _user.id,
+                phone: _user.phone
+            }
+        };
+    }
+
 
     /**
      * validate ByPassword
+     * @param phone 手机号
+     * @param password 密码
+     * @returns user
      */
     private async validateByPassowrd(phone: string, password: string): Promise<User> {
         const user = await this.userRepo.findOne({
@@ -46,6 +62,9 @@ export class AuthService {
 
     /**
      * validate BySmsCode
+     * @param phone 手机号
+     * @param code 验证码
+     * @returns user
      */
     private async validateSmsCode(phone: string, code: string): Promise<User> {
         const cacheCode = await this.redis.get(`sms:${phone}`);
@@ -70,22 +89,28 @@ export class AuthService {
         }
         return user;
     }
+
     /**
      * create access Token
+     * @param user 用户信息
+     * @returns 
      */
-    private generateAccessToken(user: User): string {
+    private generateAccessToken(user: UserDto): string {
         return this.jwtService.sign(
             {
                 sub: user.id,
                 phone: user.phone
             },
             {
-                expiresIn: '15m',
+                expiresIn: '15m', //15min有效期
             },
         );
     }
+
     /**
      * create Refresh Token
+     * @param user 用户信息
+     * @returns 
      */
     private async generateRefreshToken(user: User): Promise<string> {
         const token = crypto.randomUUID();
@@ -94,7 +119,7 @@ export class AuthService {
             token,
             expiresAt: this.getRefreshTokenExpiry(),
         });
-
+        //生成后入库
         await this.refreshTokenRepo.save(refreshToken);
         return token;
     }
@@ -107,10 +132,13 @@ export class AuthService {
      * 登出（撤销 Refresh Token）
      */
 
+    /**
+     * 过期时间设置
+     * @returns 
+     */
     private getRefreshTokenExpiry() {
         const date = new Date();
         date.setDate(date.getDate() + 7);
         return date;
     }
-
 }
