@@ -73,11 +73,31 @@ export class AuthService {
     /**
      * create access Token
      */
-    
-    
+    private generateAccessToken(user: User): string {
+        return this.jwtService.sign(
+            {
+                sub: user.id,
+                phone: user.phone
+            },
+            {
+                expiresIn: '15m',
+            },
+        );
+    }
     /**
      * create Refresh Token
      */
+    private async generateRefreshToken(user: User): Promise<string> {
+        const token = crypto.randomUUID();
+        const refreshToken = this.refreshTokenRepo.create({
+            user,
+            token,
+            expiresAt: this.getRefreshTokenExpiry(),
+        });
+
+        await this.refreshTokenRepo.save(refreshToken);
+        return token;
+    }
 
     /**
      * 刷新 Access Token
@@ -86,5 +106,11 @@ export class AuthService {
     /**
      * 登出（撤销 Refresh Token）
      */
+
+    private getRefreshTokenExpiry() {
+        const date = new Date();
+        date.setDate(date.getDate() + 7);
+        return date;
+    }
 
 }
