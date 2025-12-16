@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         // throw new Error("Method not implemented.");
         return {
             userId: payload.userId,
-            email: payload.email,
+            phone: payload.phone,
             // role: payload.role,
         };
     }
