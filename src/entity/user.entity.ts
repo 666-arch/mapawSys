@@ -8,6 +8,7 @@ import { BaseContent } from './base/base-entity';
 import { Plan } from './plan.entity';
 import { UserFavorite } from './user-favorite.entity';
 import { RefreshToken } from './refresh-token.entity';
+import { VerificationCode } from './verification-code.entity';
 @Entity({ name: 'tb_user' })
 export class User extends BaseContent {
   @OneToMany(() => Plan, (plan) => plan.user)
@@ -18,6 +19,9 @@ export class User extends BaseContent {
 
   @OneToMany(() => RefreshToken, (refToken) => refToken.user)
   refreshToken: RefreshToken[];
+
+  @OneToMany(() =>  VerificationCode, v => v.user)
+  verificationCode: VerificationCode[];
 
   @Column({ length: 50 })
   username: string; //用户名

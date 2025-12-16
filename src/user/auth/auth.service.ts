@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RefreshToken } from "src/entity/refresh-token.entity";
@@ -24,6 +24,16 @@ export class AuthService {
     /**
      * validate userInfo
      */
+
+    private async validateUser(phone: string, password: string): Promise<User> {
+        const user = await this.userRepo.findOne({
+            where: { phone },
+        })
+        if (!user) {
+            throw new UnauthorizedException('用户不存在')
+        }
+        return user;
+    }
 
     /**
      * create Access Token
