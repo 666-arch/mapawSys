@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { AuthService } from "../auth.service";
+import { Request } from "express";
 
 /**
  *  RefresgToken校验 只服务 /auth/refresh
@@ -17,11 +18,24 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
         super({
             //token 从哪里获取 --> : body { "refreshToken" : "xxx"}
             jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'),
-            secretOrkey: configService.get('JWT_SECRET'),
-            passReqToCallBack: true,
+            secretOrKey: configService.get('JWT_SECRET'),
+            passReqToCallback: true,
         })
     }
+    /**
+     * 校验 refreshToken 是否有效
+     * @param req 
+     * @param payload 
+     * @returns 
+     */
     validate(req: Request, payload: any) {
-        // const refreshToken = req.body.refreshToken
+        // 1. 获取 refreshToken
+        const refreshToken = req.body.refreshToken;
+        if (!refreshToken) {
+            throw new Error('缺少 refreshToken');
+        }
+        // 2. refreshToken 是否存在 & 是否过期 & 是否有效（查库）
+        return this.authService.validateRefreshToken(refreshToken, payload);
+        // 3. 校验通过则返回用户对象，失败则抛异常
     }
 }

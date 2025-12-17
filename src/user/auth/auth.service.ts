@@ -25,6 +25,33 @@ export class AuthService {
     ) { }
 
     /**
+     * 校验 refreshToken 是否有效
+     * @param refreshToken refresh token 字符串
+     * @param payload JWT payload（含用户id等）
+     * @returns User
+     */
+    async validateRefreshToken(refreshToken: string, payload: any): Promise<User> {
+        // 1. 查找 refreshToken 记录
+        const tokenRecord = await this.refreshTokenRepo.findOne({
+            where: { token: refreshToken },
+            relations: ['user'],
+        });
+        if (!tokenRecord) {
+            throw new UnauthorizedException('Refresh token 不存在');
+        }
+        // 2. 检查是否过期
+        if (tokenRecord.expiresAt < new Date()) {
+            throw new UnauthorizedException('Refresh token 已过期');
+        }
+        // 3. 检查 token 是否属于当前用户
+        if (payload && tokenRecord.user && tokenRecord.user.id !== payload.sub) {
+            throw new UnauthorizedException('Refresh token 与用户不匹配');
+        }
+        // 4. 返回用户对象
+        return tokenRecord.user;
+    }
+    
+    /**
      * 登录（passowrd）
      * @param user 
      * @returns 
@@ -153,9 +180,9 @@ export class AuthService {
      * @param user 
      * @returns 
      */
-    async refreshAccessToken(user: User){
+    async refreshAccessToken(user: User) {
         const accessToken = this.generateAccessToken(user);
-        return { accessToken  };
+        return { accessToken };
     }
 
     /**
