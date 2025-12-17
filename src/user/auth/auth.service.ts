@@ -25,7 +25,7 @@ export class AuthService {
     ) { }
 
     /**
-     * 用户登录（passowrd）
+     * 登录（passowrd）
      * @param user 
      * @returns 
      */
@@ -35,6 +35,11 @@ export class AuthService {
         this.createToken(_user);
     }
 
+    /**
+     * 登录（smsCode）
+     * @param user 用户
+     * @param code 验证码
+     */
     async LoginBySmsCode(user: User, code: string) {
         if (!user) throw new UnauthorizedException('错误调用，数据对象为空');
         const _user = await this.validateSmsCode(user.phone, code);
@@ -144,12 +149,27 @@ export class AuthService {
     }
 
     /**
-     * 刷新 Access Token
+     * 重置 Access Token
+     * @param user 
+     * @returns 
      */
+    async refreshAccessToken(user: User){
+        const accessToken = this.generateAccessToken(user);
+        return { accessToken  };
+    }
 
     /**
-     * 登出（撤销 Refresh Token）
+     * token 撤销
+     * @param userId 用户Id
+     * @returns 
      */
+    async logout(userId: number) {
+        await this.refreshTokenRepo.update(
+            { user: { id: userId }, isRevoked: false },
+            { isRevoked: true },
+        )
+        return { success: true };
+    }
 
     /**
      * 过期时间设置
