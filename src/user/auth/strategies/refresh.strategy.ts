@@ -34,6 +34,6 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
             throw new Error('缺少 refreshToken');
         }
         // 2. refreshToken 是否存在 & 是否过期 & 是否有效（查库）
-        return this.authService.validateRefreshToken(refreshToken, payload);
+        // return this.authService.validateRefreshToken(refreshToken, payload);
     }
 }

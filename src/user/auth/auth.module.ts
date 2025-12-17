@@ -6,7 +6,7 @@ import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { ConfigService } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { RefreshStrategy } from "./strategies/refresh.strategy";
 @Module({
@@ -17,11 +17,12 @@ import { RefreshStrategy } from "./strategies/refresh.strategy";
         PassportModule,
         //签发token
         JwtModule.registerAsync({
+            inject: [ConfigService],
             useFactory: (config: ConfigService) => ({
-                secret: config.get('JWT_SECRET'),
+                secret: config.get<string>('JWT_SECRET'),
                 //15分钟过期
                 signOptions: { expiresIn: '15m' }
-            })
+            }),
         })
     ],
     //用户需要经过 Auth 来认证

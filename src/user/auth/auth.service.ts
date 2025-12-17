@@ -69,8 +69,8 @@ export class AuthService {
      */
     async LoginBySmsCode(user: User, code: string) {
         if (!user) throw new UnauthorizedException('错误调用，数据对象为空');
-        const _user = await this.validateSmsCode(user.phone, code);
-        this.createToken(_user);
+        // const _user = await this.validateSmsCode(user.phone, code);
+        // this.createToken(_user);
     }
 
     /**
@@ -117,29 +117,30 @@ export class AuthService {
      * @param code 验证码
      * @returns user
      */
-    private async validateSmsCode(phone: string, code: string): Promise<User> {
-        const cacheCode = await this.redis.get(`sms:${phone}`);
-        if (!cacheCode) {
-            throw new UnauthorizedException('验证码已过期');
-        }
-        if (cacheCode !== code) {
-            throw new UnauthorizedException('验证码错误，请重试');
-        }
-        //验证码是一次性的，用完即删
-        await this.redis.del(`sms:${phone}`);
+    // private async validateSmsCode(phone: string, code: string): Promise<User> {
+    //     const cacheCode = 
+    //     await this.redis.get(`sms:${phone}`);
+    //     if (!cacheCode) {
+    //         throw new UnauthorizedException('验证码已过期');
+    //     }
+    //     if (cacheCode !== code) {
+    //         throw new UnauthorizedException('验证码错误，请重试');
+    //     }
+    //     //验证码是一次性的，用完即删
+    //     await this.redis.del(`sms:${phone}`);
 
-        //验证手机号
-        let user = await this.userRepo.findOne({
-            where: { phone },
-        });
+    //     //验证手机号
+    //     let user = await this.userRepo.findOne({
+    //         where: { phone },
+    //     });
 
-        //如果 user 不存在则自动注册
-        if (!user) {
-            user = this.userRepo.create({ phone });
-            await this.userRepo.save(user);
-        }
-        return user;
-    }
+    //     //如果 user 不存在则自动注册
+    //     if (!user) {
+    //         user = this.userRepo.create({ phone });
+    //         await this.userRepo.save(user);
+    //     }
+    //     return user;
+    // }
 
     /**
      * create access Token
