@@ -24,6 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
      * @returns 
      */
     validate(payload: any): unknown {
+        //这里可以做一些黑名单处理，目前暂不需要
         return {
             userId: payload.userId,
             phone: payload.phone,
