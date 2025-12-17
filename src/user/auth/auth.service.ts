@@ -19,26 +19,45 @@ export class AuthService {
 
         private readonly jwtService: JwtService,
 
-        @Inject('REDIS_CLIENT') //导入注册好的全局 Redis
+        //导入注册好的全局 Redis
+        @Inject('REDIS_CLIENT')
         private readonly redis: Redis,
     ) { }
 
     /**
-     * 密码登录
+     * 用户登录（passowrd）
+     * @param user 
+     * @returns 
      */
-    async LoginByPassowd(user: UserDto) {
-        if (!user) throw new UnauthorizedException('错误调用，数据对象为空')
-        const _user = await this.validateByPassowrd(user.phone, user.password)
+    async LoginByPassowd(user: User) {
+        if (!user) throw new UnauthorizedException('错误调用，数据对象为空');
+        const _user = await this.validateByPassowrd(user.phone, user.password);
+        this.createToken(_user);
+    }
+
+    async LoginBySmsCode(user: User, code: string) {
+        if (!user) throw new UnauthorizedException('错误调用，数据对象为空');
+        const _user = await this.validateSmsCode(user.phone, code);
+        this.createToken(_user);
+    }
+
+    /**
+     * Token颁布
+     * @param user 用户对象
+     * @returns 
+     */
+    private async createToken(user: User) {
         const accessToken = this.generateAccessToken(user);
+        const refreshToken = await this.generateRefreshToken(user);
         return {
             accessToken,
+            refreshToken,
             user: {
-                id: _user.id,
-                phone: _user.phone
+                id: user.id,
+                phone: user.phone,
             }
         };
     }
-
 
     /**
      * validate ByPassword
@@ -95,7 +114,7 @@ export class AuthService {
      * @param user 用户信息
      * @returns 
      */
-    private generateAccessToken(user: UserDto): string {
+    private generateAccessToken(user: User): string {
         return this.jwtService.sign(
             {
                 sub: user.id,
