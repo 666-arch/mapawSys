@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from '@nestjs/passport';
+import { Request } from "express";
 import { Strategy, ExtractJwt } from 'passport-jwt';
 
 @Injectable()
@@ -18,15 +19,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
     /**
      * 何时调用？
-     * token是否存在 & 格式是否正确 & 签名是否正确 & 是否过期
-     * @param args 
+     * 1. 通过 Guard 装饰器标注守卫后会自动执行 validate
+     * @param payload 
+     * @returns 
      */
     validate(payload: any): unknown {
-        // throw new Error("Method not implemented.");
         return {
             userId: payload.userId,
             phone: payload.phone,
-            // role: payload.role,
         };
     }
 }

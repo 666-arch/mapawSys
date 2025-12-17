@@ -12,21 +12,20 @@ import { Request } from "express";
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     constructor(
-        private configService: ConfigService,
         private authService: AuthService
     ) {
         super({
-            //token 从哪里获取 --> : body { "refreshToken" : "xxx"}
+            //body { "refreshToken" : "xxx"}
             jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'),
-            secretOrKey: configService.get('JWT_SECRET'),
+            secretOrKey: new ConfigService().get('JWT_SECRET'),
             passReqToCallback: true,
         })
     }
     /**
-     * 校验 refreshToken 是否有效
+     * 通过 Guard装饰器标注守卫后会自动执行 validate，校验 refreshToken 是否有效
      * @param req 
      * @param payload 
-     * @returns 
+     * @returns 校验通过则返回用户对象，失败则抛异常
      */
     validate(req: Request, payload: any) {
         // 1. 获取 refreshToken
@@ -36,6 +35,5 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
         }
         // 2. refreshToken 是否存在 & 是否过期 & 是否有效（查库）
         return this.authService.validateRefreshToken(refreshToken, payload);
-        // 3. 校验通过则返回用户对象，失败则抛异常
     }
 }

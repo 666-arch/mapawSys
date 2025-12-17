@@ -50,7 +50,7 @@ export class AuthService {
         // 4. 返回用户对象
         return tokenRecord.user;
     }
-    
+
     /**
      * 登录（passowrd）
      * @param user 
