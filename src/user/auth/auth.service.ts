@@ -57,7 +57,7 @@ export class AuthService {
     }
 
     /**
-     * 登录（passowrd）
+     * 登录（passowrd）可能暂时用不到
      * @param user 
      * @returns 
      */
@@ -77,7 +77,6 @@ export class AuthService {
         const _user = await this.validateSmsCode(user.phone, code);
         this.createToken(_user);
     }
-
 
 
     /**
