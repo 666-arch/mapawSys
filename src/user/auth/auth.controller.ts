@@ -13,7 +13,7 @@ export class AuthController {
      * @returns 
      */
     @Post('/register')
-    async RegisterUser(user: UserDto) {
+    async RegisterUser(@Body() user: UserDto) {
         if (!user) {
             throw new Error('用户数据为空');
         }

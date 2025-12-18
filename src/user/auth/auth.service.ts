@@ -72,7 +72,7 @@ export class AuthService {
      * @param user 用户
      * @param code 验证码
      */
-    async LoginBySmsCode(user: User, code: string) {
+    async LoginBySmsCode(user: UserDto, code: string) {
         if (!user) throw new UnauthorizedException('错误调用，数据对象为空');
         const _user = await this.validateSmsCode(user.phone, code);
         this.createToken(_user);
