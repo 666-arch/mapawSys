@@ -29,7 +29,7 @@ export class User extends BaseContent {
   @Column({ length: 255 })
   password: string; //密码
 
-  @Column({ length: 255, nullable: true })
+  @Column({unique:true, length: 255, nullable: true })
   phone: string | null; //手机号
 
   @Index()

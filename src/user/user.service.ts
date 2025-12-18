@@ -11,7 +11,9 @@ export class UserService {
         private readonly userRepo: Repository<User>,
     ){}
     /**
-     * register
+     * 注册新用户
+     * @param user 用户数据
+     * @returns User
      */
     async RegisterUser(user: RegisterUserDto) {
         if (!user) throw new Error('错误调用，数据对象为空');
