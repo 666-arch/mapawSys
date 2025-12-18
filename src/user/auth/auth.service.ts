@@ -78,6 +78,8 @@ export class AuthService {
         this.createToken(_user);
     }
 
+
+
     /**
      * Token颁布
      * @param user 用户对象
@@ -212,5 +214,20 @@ export class AuthService {
         const date = new Date();
         date.setDate(date.getDate() + 7);
         return date;
+    }
+
+    /**
+     * 发送短信验证码
+     * @param phone 手机号
+     */
+    async sendSmsCode(phone: string) {
+        // 生成6位数字验证码
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        // 存入redis，5分钟有效
+        await this.redis.set(`sms:${phone}`, code, 'EX', 300);
+        // 调用短信服务商API发送验证码
+        // 这里先做mock，实际需要接入短信服务
+        console.log(`发送验证码 ${code} 到手机号 ${phone}`);
+        return { success: true, message: '验证码已发送' };
     }
 }

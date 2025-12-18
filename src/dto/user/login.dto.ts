@@ -1,5 +1,5 @@
 export class LoginDto {
     phone: string;
-    password: string;
-    smsCode: string;
+    // password: string;
+    code: string;
 }
