@@ -21,7 +21,7 @@ export class AuthController {
         if (!user.phone) {
             throw new Error('手机号不能为空');
         }
-        this.authService.LoginBySmsCode(user, user.code);
+       return this.authService.LoginBySmsCode(user);
     }
 
     /**

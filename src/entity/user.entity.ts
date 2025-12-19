@@ -23,11 +23,11 @@ export class User extends BaseContent {
   @OneToMany(() =>  VerificationCode, v => v.user)
   verificationCode: VerificationCode[];
 
-  @Column({ length: 50 })
-  username: string; //用户名
+  @Column({ length: 50, nullable: true })
+  username: string | null; //用户名
 
-  @Column({ length: 255 })
-  password: string; //密码
+  @Column({ length: 255, nullable: true })
+  password: string| null; //密码
 
   @Column({unique:true, length: 255, nullable: true })
   phone: string | null; //手机号

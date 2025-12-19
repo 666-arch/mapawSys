@@ -72,10 +72,10 @@ export class AuthService {
      * @param user 用户
      * @param code 验证码
      */
-    async LoginBySmsCode(user: UserDto, code: string) {
+    async LoginBySmsCode(user: UserDto) {
         if (!user) throw new UnauthorizedException('错误调用，数据对象为空');
-        const _user = await this.validateSmsCode(user.phone, code);
-        this.createToken(_user);
+        const _user = await this.validateSmsCode(user);
+        return this.createToken(_user);
     }
 
 
@@ -123,29 +123,32 @@ export class AuthService {
      * @param code 验证码
      * @returns user
      */
-    private async validateSmsCode(phone: string, code: string): Promise<User> {
+    private async validateSmsCode(user: UserDto): Promise<User> {
         const cacheCode = 
-        await this.redis.get(`sms:${phone}`);
+        await this.redis.get(`sms:${user.phone}`);
         if (!cacheCode) {
             throw new UnauthorizedException('验证码已过期');
         }
-        if (cacheCode !== code) {
+        if (cacheCode !== user.code) {
             throw new UnauthorizedException('验证码错误，请重试');
         }
         //验证码是一次性的，用完即删
-        await this.redis.del(`sms:${phone}`);
+        await this.redis.del(`sms:${user.phone}`);
 
-        //验证手机号
-        let user = await this.userRepo.findOne({
-            where: { phone },
+        // //验证手机号
+        let _user = await this.userRepo.findOne({
+            where: { phone: user.phone },
         });
 
-        //如果 user 不存在则自动注册
-        if (!user) {
-            user = this.userRepo.create({ phone });
-            await this.userRepo.save(user);
+        // //如果 user 不存在则自动注册
+        if (!_user) {
+            _user = this.userRepo.create({
+                phone: user.phone,
+                lastLoginTime: new Date(),
+            });
+            await this.userRepo.save(_user);
         }
-        return user;
+        return _user;
     }
 
     /**

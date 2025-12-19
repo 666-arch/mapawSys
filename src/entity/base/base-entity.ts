@@ -1,7 +1,7 @@
-import { CreateDateColumn, PrimaryColumn } from "typeorm";
+import { CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 
 export abstract class BaseContent { 
-    @PrimaryColumn({ type: 'bigint'})
+    @PrimaryGeneratedColumn({ type: 'bigint'})
     id: number;
 
     @CreateDateColumn({ name: 'create_at' })
