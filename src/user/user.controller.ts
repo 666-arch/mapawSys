@@ -1,9 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 
 @Controller('user')
 export class UserController {
-    @Get('/profile')
+    @Post('/profile')
     getProfile() {
+        return { message: 'User profile endpoint' }
+    }
+    
+    @Post('/resetProfile')
+    saveProfile() {
         return { message: 'User profile endpoint' }
     }
 }

@@ -19,7 +19,7 @@ export class AuthService {
 
         private readonly jwtService: JwtService,
 
-        //导入注册好的全局 Redis
+        //导入注册好的全局 Redis    
         @Inject('REDIS_CLIENT')
         private readonly redis: Redis,
     ) { 
@@ -145,6 +145,7 @@ export class AuthService {
             _user = this.userRepo.create({
                 phone: user.phone,
                 lastLoginTime: new Date(),
+                createAt: new Date(),
             });
             await this.userRepo.save(_user);
         }

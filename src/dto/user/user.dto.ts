@@ -5,4 +5,6 @@ export class UserDto extends LoginDto{
     accessToken: string;
     refreshToken: string;
     lastLoginTime: Date;
+    createAt: Date; //创建时间
+    updateAt: Date; //修改时间
 }
