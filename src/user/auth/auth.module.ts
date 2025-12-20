@@ -8,7 +8,7 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtStrategy } from "./strategies/jwt.strategy";
-import { RefreshStrategy } from "./strategies/refresh.strategy";
+// import { RefreshStrategy } from "./strategies/refresh.strategy";
 @Module({
     imports: [
         //注册实体
@@ -31,7 +31,7 @@ import { RefreshStrategy } from "./strategies/refresh.strategy";
     providers: [
         AuthService, //处理 token 逻辑
         JwtStrategy, //校验 token 可信度
-        RefreshStrategy, 
+        // RefreshStrategy, 
     ]
 })
 export class AuthModule {}

@@ -35,7 +35,7 @@ export class AuthService {
      * @param payload JWT payload（含用户id等）
      * @returns User
      */
-    async validateRefreshToken(refreshToken: string, payload: any): Promise<User> {
+    async validateRefreshToken(refreshToken: string): Promise<User> {
         // 1. 查找 refreshToken 记录
         const tokenRecord = await this.refreshTokenRepo.findOne({
             where: { token: refreshToken },
@@ -52,7 +52,7 @@ export class AuthService {
         // if (payload && tokenRecord.user && tokenRecord.user.id !== payload.sub) {
         //     throw new UnauthorizedException('Refresh token 与用户不匹配');
         // }
-        
+
         // 4. 返回用户对象
         return tokenRecord.user;
     }
@@ -176,7 +176,7 @@ export class AuthService {
      * @returns 
      */
     private async generateRefreshToken(user: User): Promise<string> {
-        const token = crypto.randomUUID();
+        const token = crypto.randomUUID(); //bug
         const refreshToken = this.refreshTokenRepo.create({
             user,
             token,
@@ -184,7 +184,7 @@ export class AuthService {
         });
         //生成后入库
         await this.refreshTokenRepo.save(refreshToken);
-        return token;
+        return token;  
     }
 
     /**
