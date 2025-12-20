@@ -49,9 +49,10 @@ export class AuthService {
             throw new UnauthorizedException('Refresh token 已过期');
         }
         // 3. 检查 token 是否属于当前用户
-        if (payload && tokenRecord.user && tokenRecord.user.id !== payload.sub) {
-            throw new UnauthorizedException('Refresh token 与用户不匹配');
-        }
+        // if (payload && tokenRecord.user && tokenRecord.user.id !== payload.sub) {
+        //     throw new UnauthorizedException('Refresh token 与用户不匹配');
+        // }
+        
         // 4. 返回用户对象
         return tokenRecord.user;
     }
@@ -98,26 +99,6 @@ export class AuthService {
     }
 
     /**
-     * validate ByPassword
-     * @param phone 手机号
-     * @param password 密码
-     * @returns user
-     */
-    private async validateByPassowrd(phone: string, password: string): Promise<User> {
-        const user = await this.userRepo.findOne({
-            where: { phone }
-        });
-        if (!user) {
-            throw new UnauthorizedException('用户不存在');
-        }
-        const matchPwd = await bcrypt.compare(password, user.password);
-        if (!matchPwd) {
-            throw new UnauthorizedException('用户密码错误');
-        }
-        return user;
-    }
-
-    /**
      * validate BySmsCode
      * @param phone 手机号
      * @param code 验证码
@@ -150,6 +131,26 @@ export class AuthService {
             await this.userRepo.save(_user);
         }
         return _user;
+    }
+
+    /**
+     * validate ByPassword
+     * @param phone 手机号
+     * @param password 密码
+     * @returns user
+     */
+    private async validateByPassowrd(phone: string, password: string): Promise<User> {
+        const user = await this.userRepo.findOne({
+            where: { phone }
+        });
+        if (!user) {
+            throw new UnauthorizedException('用户不存在');
+        }
+        const matchPwd = await bcrypt.compare(password, user.password);
+        if (!matchPwd) {
+            throw new UnauthorizedException('用户密码错误');
+        }
+        return user;
     }
 
     /**
@@ -215,7 +216,7 @@ export class AuthService {
      */
     private getRefreshTokenExpiry() {
         const date = new Date();
-        date.setDate(date.getDate() + 7);
+        date.setDate(date.getDate() + 7); //7天过期
         return date;
     }
 

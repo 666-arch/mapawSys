@@ -52,6 +52,8 @@ synchronize 来启用自动同步生成表
 
 ❌ 失败 → 强制重新登录
 
+![auth 图解](无标题-2025-12-20-2021.png)
+
 ## Installation
 ```bash
 $ pnpm install

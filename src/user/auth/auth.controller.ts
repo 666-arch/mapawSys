@@ -1,10 +1,20 @@
-import { Controller, Post, Body } from "@nestjs/common";
+import { Controller, Post, Body, UseGuards, Request, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { UserDto } from "src/dto/user/user.dto";
+import { RefreshAuthGuard } from "./guards/refresh-auth.guard";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
+
+    /**
+     * Access Token过期后调用
+     */
+    @UseGuards(RefreshAuthGuard)
+    @Post('/refresh')
+    async refreshAccessToken(@Req() req) {
+        console.log('req',req.user);
+    }
 
     /**
      * 用户注册 Api

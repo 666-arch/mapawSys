@@ -11,29 +11,19 @@ import { Request } from "express";
  */
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-    constructor(
-        private authService: AuthService
-    ) {
-        super({
-            //body { "refreshToken" : "xxx"}
-            jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'),
-            secretOrKey: new ConfigService().get('JWT_SECRET'),
-            passReqToCallback: true,
-        })
-    }
-    /**
-     * 通过 Guard装饰器标注守卫后会自动执行 validate，校验 refreshToken 是否有效
-     * @param req 
-     * @param payload 
-     * @returns 校验通过则返回用户对象，失败则抛异常
-     */
-    validate(req: Request, payload: any) {
-        // 1. 获取 refreshToken
-        const refreshToken = req.body.refreshToken;
-        if (!refreshToken) {
-            throw new Error('缺少 refreshToken');
-        }
-        // 2. refreshToken 是否存在 & 是否过期 & 是否有效（查库）
-        // return this.authService.validateRefreshToken(refreshToken, payload);
-    }
+  constructor(
+    private authService: AuthService,
+    configService: ConfigService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'),
+      secretOrKey: configService.get('JWT_SECRET'),
+      passReqToCallback: true,
+    });
+  }
+
+  async validate(req: Request, payload: any) {
+    const refreshToken = req.body.refreshToken;
+    return this.authService.validateRefreshToken(refreshToken, payload);
+  }
 }
