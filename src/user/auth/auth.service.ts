@@ -165,7 +165,7 @@ export class AuthService {
                 phone: user.phone
             },
             {
-                expiresIn: '15m', //15min有效期
+                expiresIn: '45m', //45min有效期
             },
         );
     }
