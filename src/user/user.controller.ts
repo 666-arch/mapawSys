@@ -23,6 +23,7 @@ export class UserController {
         }
         // 覆盖客户端传来的 id，防止伪造
         userInfo.id = userId;
+        userInfo.updateAt = new Date();
         await this.userService.setUserProfile(userInfo);
         return { message: '用户信息更新成功' };
     }

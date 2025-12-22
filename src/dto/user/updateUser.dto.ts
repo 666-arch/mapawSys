@@ -1,8 +1,10 @@
+import { GenderType } from 'src/entity/user.entity';
+
 export class UpdateUserDto {
   id: number;
   username: string;
   email: string;
-  gender: string;
+  gender: GenderType;
   avatar: string;
-  update_at: Date;
+  updateAt: Date;
 }

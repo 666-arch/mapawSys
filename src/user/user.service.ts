@@ -12,8 +12,6 @@ export class UserService {
     ){}
 
     async setUserProfile(userInfo: Partial<UpdateUserDto>){
-        console.log('====================================');
-        console.log(userInfo);
-        console.log('====================================');
+        await this.userRepo.update({id: userInfo.id}, userInfo);
     }
 }

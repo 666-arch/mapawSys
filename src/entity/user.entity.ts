@@ -9,6 +9,12 @@ import { Plan } from './plan.entity';
 import { UserFavorite } from './user-favorite.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { VerificationCode } from './verification-code.entity';
+
+export enum GenderType {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other'
+}
 @Entity({ name: 'tb_user' })
 export class User extends BaseContent {
   @OneToMany(() => Plan, (plan) => plan.user)
@@ -36,8 +42,8 @@ export class User extends BaseContent {
   @Column({ length: 100, nullable: true })
   email: string | null; //邮箱
 
-  @Column({ length: 10, nullable: true })
-  gender: string | null; //性别
+  @Column({type: 'enum', enum: GenderType, nullable: true })
+  gender: GenderType | null; //性别
 
   @Column({ length: 255, nullable: true })
   avatar: string | null; //头像
