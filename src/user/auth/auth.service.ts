@@ -22,7 +22,7 @@ export class AuthService {
         //导入注册好的全局 Redis    
         @Inject('REDIS_CLIENT')
         private readonly redis: Redis,
-    ) { 
+    ) {
         // 监听 Redis 错误
         redis.on('error', (err) => {
             // console.error('Redis error:', err);
@@ -105,8 +105,8 @@ export class AuthService {
      * @returns user
      */
     private async validateSmsCode(user: UserDto): Promise<User> {
-        const cacheCode = 
-        await this.redis.get(`sms:${user.phone}`);
+        const cacheCode =
+            await this.redis.get(`sms:${user.phone}`);
         if (!cacheCode) {
             throw new UnauthorizedException('验证码已过期');
         }
@@ -120,7 +120,6 @@ export class AuthService {
         let _user = await this.userRepo.findOne({
             where: { phone: user.phone },
         });
-
         // //如果 user 不存在则自动注册
         if (!_user) {
             _user = this.userRepo.create({
@@ -129,6 +128,12 @@ export class AuthService {
                 createAt: new Date(),
             });
             await this.userRepo.save(_user);
+        } else {
+            //更新最后登录时间
+            _user.lastLoginTime = new Date();
+            await this.userRepo.save(_user);
+            //标记isRevoked为true
+            this.setRevoked(_user.id);
         }
         return _user;
     }
@@ -184,7 +189,7 @@ export class AuthService {
         });
         //生成后入库
         await this.refreshTokenRepo.save(refreshToken);
-        return token;  
+        return token;
     }
 
     /**
@@ -203,22 +208,14 @@ export class AuthService {
      * @returns 
      */
     async logout(userId: number) {
-        await this.refreshTokenRepo.update(
-            { user: { id: userId }, isRevoked: false },
-            { isRevoked: true },
-        )
+        // await this.refreshTokenRepo.update(
+        //     { user: { id: userId }, isRevoked: false },
+        //     { isRevoked: true },
+        // )
+        this.setRevoked(userId);
         return { success: true };
     }
 
-    /**
-     * 过期时间设置
-     * @returns 
-     */
-    private getRefreshTokenExpiry() {
-        const date = new Date();
-        date.setDate(date.getDate() + 7); //7天过期
-        return date;
-    }
 
     /**
      * 发送短信验证码
@@ -233,5 +230,26 @@ export class AuthService {
         // 这里先做mock，实际需要接入短信服务
         console.log(`发送验证码 ${code} 到手机号 ${phone}`);
         return { success: true, message: '验证码已发送' };
+    }
+
+    /**
+     * 标记是否失效，目前采用单端登录，如果已存在用户二次登录，isRevoked标记为true
+     * @param userId 
+     */
+    private async setRevoked(userId: number) {
+        await this.refreshTokenRepo.update(
+            { user: { id: userId }, isRevoked: false },
+            { isRevoked: true },
+        )
+    }
+
+    /**
+     * 过期时间设置
+     * @returns 
+     */
+    private getRefreshTokenExpiry() {
+        const date = new Date();
+        date.setDate(date.getDate() + 7); //7天过期
+        return date;
     }
 }

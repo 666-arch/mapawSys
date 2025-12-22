@@ -12,7 +12,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 @Module({
     imports: [
         //注册实体
-        TypeOrmModule.forFeature([User, RefreshToken]), 
+        TypeOrmModule.forFeature([User, RefreshToken]),
         //导入认证库，Passport
         PassportModule,
         //签发token
@@ -32,6 +32,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
         AuthService, //处理 token 逻辑
         JwtStrategy, //校验 token 可信度
         // RefreshStrategy, 
-    ]
+    ],
+    exports: [JwtStrategy]
 })
-export class AuthModule {}
+export class AuthModule { }

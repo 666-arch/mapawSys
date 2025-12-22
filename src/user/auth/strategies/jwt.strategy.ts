@@ -10,6 +10,7 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
  */
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(config: ConfigService) {
+          console.log('🔥 JwtStrategy initialized');
         super({
             //验证token从何而来，会自动去找 Authorization: Bearer xxx
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

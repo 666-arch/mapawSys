@@ -12,6 +12,8 @@ export class UserService {
     ){}
 
     async setUserProfile(userInfo: Partial<UpdateUserDto>){
-        
+        console.log('====================================');
+        console.log(userInfo);
+        console.log('====================================');
     }
 }
