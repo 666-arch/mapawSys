@@ -166,7 +166,7 @@ export class AuthService {
     private generateAccessToken(user: User): string {
         return this.jwtService.sign(
             {
-                sub: user.id,
+                sub: user.id, //守卫听过req 可以反向验证是否是该用户，防止伪造
                 phone: user.phone
             },
             {
