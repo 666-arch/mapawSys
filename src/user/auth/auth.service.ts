@@ -169,7 +169,7 @@ export class AuthService {
                 phone: user.phone
             },
             {
-                expiresIn: '45m', //45min有效期
+                expiresIn: '60m', //60min有效期
             },
         );
     }

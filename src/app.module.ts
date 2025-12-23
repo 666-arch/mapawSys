@@ -7,7 +7,6 @@ import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './user/auth/auth.module';
-import { AuthService } from './user/auth/auth.service';
 import { PlanModule } from './plan/plan.module';
 
 @Module({
@@ -42,7 +41,7 @@ import { PlanModule } from './plan/plan.module';
     }),
     UserModule,
     AuthModule,
-    PlanModule
+    PlanModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
