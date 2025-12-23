@@ -21,7 +21,11 @@ export class AuthController {
   @UseGuards(RefreshAuthGuard)
   @Post('/refresh')
   async refreshAccessToken(@Req() req) {
-    console.log('req', req.user);
+    const user = req.user;
+    // 1. 吊销旧 refreshToken
+    await this.authService.revokeRefreshTokenByToken(req.refreshToken);
+    // 2. 生成新的 access token 和 refresh token
+    return this.authService.createToken(user);
   }
 
   /**

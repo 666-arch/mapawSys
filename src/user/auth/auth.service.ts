@@ -35,8 +35,8 @@ export class AuthService {
      * @param payload JWT payload（含用户id等）
      * @returns User
      */
-    async validateRefreshToken(refreshToken: string): Promise<User> {
-        // 1. 查找 refreshToken 记录
+    async validateRefreshToken(refreshToken: string) {
+        // 1.查找 refreshToken 记录
         const tokenRecord = await this.refreshTokenRepo.findOne({
             where: { token: refreshToken },
             relations: ['user'],
@@ -44,15 +44,14 @@ export class AuthService {
         if (!tokenRecord) {
             throw new UnauthorizedException('Refresh token 不存在');
         }
-        // 2. 检查是否过期
+        // 2.检查是否过期（这里不需要revoked，因为已经过期了）
         if (tokenRecord.expiresAt < new Date()) {
             throw new UnauthorizedException('Refresh token 已过期');
         }
-        // 3. 检查 token 是否属于当前用户
-        // if (payload && tokenRecord.user && tokenRecord.user.id !== payload.sub) {
-        //     throw new UnauthorizedException('Refresh token 与用户不匹配');
-        // }
-
+        // 3.检查是否被撤销
+        if (tokenRecord.isRevoked) {
+            throw new UnauthorizedException('Refresh token 已被撤销');
+        }
         // 4. 返回用户对象
         return tokenRecord.user;
     }
@@ -85,8 +84,8 @@ export class AuthService {
      * @param user 用户对象
      * @returns 
      */
-    private async createToken(user: User) {
-        const accessToken = this.generateAccessToken(user);
+    async createToken(user: User) {
+        const accessToken = await this.generateAccessToken(user);
         const refreshToken = await this.generateRefreshToken(user);
         return {
             accessToken,
@@ -133,7 +132,7 @@ export class AuthService {
             _user.lastLoginTime = new Date();
             await this.userRepo.save(_user);
             //标记isRevoked为true
-            this.setRevoked(_user.id);
+            this.revokeRefreshToken(_user.id);
         }
         return _user;
     }
@@ -163,7 +162,7 @@ export class AuthService {
      * @param user 用户信息
      * @returns 
      */
-    private generateAccessToken(user: User): string {
+    private async generateAccessToken(user: User) {
         return this.jwtService.sign(
             {
                 sub: user.id, //守卫听过req 可以反向验证是否是该用户，防止伪造
@@ -198,7 +197,7 @@ export class AuthService {
      * @returns 
      */
     async refreshAccessToken(user: User) {
-        const accessToken = this.generateAccessToken(user);
+        const accessToken = await this.generateAccessToken(user);
         return { accessToken };
     }
 
@@ -208,11 +207,7 @@ export class AuthService {
      * @returns 
      */
     async logout(userId: number) {
-        // await this.refreshTokenRepo.update(
-        //     { user: { id: userId }, isRevoked: false },
-        //     { isRevoked: true },
-        // )
-        this.setRevoked(userId);
+        this.revokeRefreshToken(userId);
         return { success: true };
     }
 
@@ -233,14 +228,25 @@ export class AuthService {
     }
 
     /**
-     * 标记是否失效，目前采用单端登录，如果已存在用户二次登录，isRevoked标记为true
+     * 标记是否失效，如果是单端登录调用这个，如果已存在用户二次登录，isRevoked标记为true
      * @param userId 
      */
-    private async setRevoked(userId: number) {
+    private async revokeRefreshToken(userId: number) {
         await this.refreshTokenRepo.update(
             { user: { id: userId }, isRevoked: false },
             { isRevoked: true },
         )
+    }
+
+    /**
+     * 根据 token 字符串吊销 refresh token
+     * @param token 
+     */
+    async revokeRefreshTokenByToken(token: string) {
+        await this.refreshTokenRepo.update(
+            { token },
+            { isRevoked: true },
+        );
     }
 
     /**
