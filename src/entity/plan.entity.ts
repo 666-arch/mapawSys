@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { User } from "./user.entity";
 import { City } from "./city.entity";
 import { BaseContent } from "./base/base-entity";
+import { DailyPlan } from "./daily-plan.entity";
 
 export enum TravelType {
     COUPLE = 'couple',
@@ -15,7 +16,10 @@ export class Plan extends BaseContent{
     user: User; 
 
     @ManyToOne(() => City, u => u.plans, { nullable: false, onDelete: 'CASCADE' })
-    city: City; 
+    city: City;
+
+    @OneToMany(() => DailyPlan, dailyPlan => dailyPlan.plan, { cascade: true })
+    dailyPlans: DailyPlan[];
 
     @Column({ length: 100 })
     title: string; //攻略大标题

@@ -1,6 +1,8 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseContent } from "./base/base-entity";
 import { Poi } from "./poi.entity";
+import { Plan } from "./plan.entity";
+import { DailyPlanItem } from "./daily-plan-item.entity";
 
 @Entity({ name: 'tb_daily_plan'})
 export class DailyPlan extends BaseContent {
@@ -18,4 +20,10 @@ export class DailyPlan extends BaseContent {
 
     @ManyToOne(()=> Poi, dp => dp.dailyPlan, { nullable: false, onDelete: 'CASCADE'})
     poi: Poi;
+
+    @ManyToOne(() => Plan, p => p.dailyPlans, { nullable: false, onDelete: 'CASCADE' })
+    plan: Plan;
+
+    @OneToMany(() => DailyPlanItem, dpi => dpi.dailyPlan)
+    items: DailyPlanItem[];
 }
