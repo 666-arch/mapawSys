@@ -18,8 +18,8 @@ export class DailyPlan extends BaseContent {
     @Column({ length: 50, nullable: true })
     transport: string | null; //交通方式
 
-    @ManyToOne(()=> Poi, dp => dp.dailyPlan, { nullable: false, onDelete: 'CASCADE'})
-    poi: Poi;
+    // @ManyToOne(()=> Poi, dp => dp.dailyPlan, { nullable: false, onDelete: 'CASCADE'})
+    // poi: Poi;
 
     @ManyToOne(() => Plan, p => p.dailyPlans, { nullable: false, onDelete: 'CASCADE' })
     plan: Plan;

@@ -17,8 +17,8 @@ import { DailyPlan } from "./daily-plan.entity";
         @Column({ name: 'end_time'})
         endTime: Date;
 
-        @ManyToMany(() => Poi, p => p.dailyPlanItem, { nullable: false, onDelete: 'CASCADE'})
-        poi: Poi;
+        // @ManyToMany(() => Poi, p => p.dailyPlanItem, { nullable: false, onDelete: 'CASCADE'})
+        // poi: Poi;
 
         @ManyToOne(() => DailyPlan, dp => dp.items, { nullable: false, onDelete: 'CASCADE' })
         dailyPlan: DailyPlan;

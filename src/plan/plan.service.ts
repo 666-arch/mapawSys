@@ -50,8 +50,7 @@ export class PlanService {
     });
     if (!plan) return new NotFoundException('计划不存在');
     if (plan.user.id !== userId) throw new NotFoundException('无权进行该操作');
-    if (plan.dailyPlans && plan.dailyPlans.length > 0)
-      throw new NotFoundException('行程已生成，如需重生成请先删除');
+    if (plan.dailyPlans && plan.dailyPlans.length > 0) throw new NotFoundException('行程已生成，如需重生成请先删除');
 
     for (let day = 1; day <= plan.days; day++) {
       const daily = await this.dailyPlanRepo.save(
