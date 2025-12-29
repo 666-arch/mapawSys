@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
  * 它只是一个触发器，通知 nest 接口需要通过何种 Strategy 来鉴权
  * 可能需要再做个 限制刷新频率的功能
  */
+@Injectable()
 export class RefreshAuthGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 

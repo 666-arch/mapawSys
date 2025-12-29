@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Query, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { PlanService } from './plan.service';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
 import { CreatePlanDto } from 'src/dto/plan/createPlan.dto';
@@ -33,8 +33,8 @@ export class PlanController {
    * @param planId 计划 ID
    * @returns 修改结果
    */
-  @Post('/modify-plan:planId')
-  async modifyPlan(@Req() req, @Body() planDto: CreatePlanDto, planId: number) {
+  @Post('/modify-plan')
+  async modifyPlan(@Req() req, @Body() planDto: CreatePlanDto, @Query('planId') planId: number) {
     const user = req?.user ?? null;
     const userId = user?.id ?? user?.userId ?? user?.sub;
     if (!userId) {
