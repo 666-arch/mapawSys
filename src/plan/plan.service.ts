@@ -38,6 +38,25 @@ export class PlanService {
     }
 
     /** 
+     * 修改已有计划
+     * @param userId 用户 ID
+     * @param planId 计划 ID
+     * @param planDto 计划数据传输对象
+     * @returns 修改结果
+     */
+    async modifyPlan(userId: number, planId: number, planDto: Partial<CreatePlanDto>) {
+        const plan = await this.planRepo.findOne({
+            where: { id: planId },
+            relations: ['user'],
+        });
+        if (!plan) throw new NotFoundException('计划不存在');
+        if (plan.user.id !== userId) throw new NotFoundException('您无权进行该操作');
+        Object.assign(plan, planDto, { updateAt: new Date() });
+        const updatePlan = await this.planRepo.save(plan);
+        return { success: true, data: updatePlan };
+    }
+
+    /** 
      * 生成每日行程
      * @param userId 用户 ID
      * @param planId 计划 ID
@@ -76,6 +95,5 @@ export class PlanService {
             ]);
         }
         return { message: '行程生成成功' };
-
     }
 }

@@ -6,6 +6,7 @@ import { UserFavorite } from './user-favorite.entity';
 
 export type POIType = 'spot' | 'food' | 'hotel';
 
+//用户一切可能需要去的地方
 @Entity({ name: 'tb_poi' })
 export class Poi extends BaseContent {
   @Column({ length: 100 })
