@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { PlanService } from './plan.service';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
 import { CreatePlanDto } from 'src/dto/plan/createPlan.dto';
@@ -20,6 +20,9 @@ export class PlanController {
     if (!userId) {
       throw new UnauthorizedException('无法识别的用户');
     }
+    if (!planDto) {
+      throw new UnauthorizedException('计划数据不能为空');
+    }
     return this.planService.createPlan(userId, planDto);
   }
 
@@ -30,12 +33,18 @@ export class PlanController {
    * @param planId 计划 ID
    * @returns 修改结果
    */
-  @Post('/modify-plan/:planId')
-  async modifyPlan(@Req() req, @Body() planDto: CreatePlanDto, planId: number){
-     const user = req?.user ?? null;
+  @Post('/modify-plan:planId')
+  async modifyPlan(@Req() req, @Body() planDto: CreatePlanDto, planId: number) {
+    const user = req?.user ?? null;
     const userId = user?.id ?? user?.userId ?? user?.sub;
     if (!userId) {
       throw new UnauthorizedException('无法识别的用户');
+    }
+    if (!planId) {
+      throw new UnauthorizedException('计划 ID 不能为空');
+    }
+    if (!planDto) {
+      throw new UnauthorizedException('计划数据不能为空');
     }
     return this.planService.modifyPlan(userId, planId, planDto);
   }
