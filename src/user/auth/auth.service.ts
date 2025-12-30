@@ -165,11 +165,11 @@ export class AuthService {
     private async generateAccessToken(user: User) {
         return this.jwtService.sign(
             {
-                sub: user.id, //守卫听过req 可以反向验证是否是该用户，防止伪造
+                sub: user.id, //守卫通过req获取 可以反向验证是否是该用户，防止伪造
                 phone: user.phone
             },
             {
-                expiresIn: '60m', //60min有效期
+                expiresIn: '600m', //6h有效期
             },
         );
     }
