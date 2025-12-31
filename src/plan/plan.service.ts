@@ -18,6 +18,18 @@ export class PlanService {
         @InjectRepository(DailyPlanItem)
         private readonly itemRepo: Repository<DailyPlanItem>,
     ) { }
+    
+    /**
+     * 根据用户 ID 获取其所有计划
+     * @param userId 用户 ID
+     * @returns 计划列表
+     */
+    async getPlansByUserId(userId: number){
+        const plans = await this.planRepo.find({
+            where: { user: { id: userId } },
+        })
+        return { success: true, data: plans, count: plans.length };
+    }
 
     /**
      * 创建新计划

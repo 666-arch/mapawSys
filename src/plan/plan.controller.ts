@@ -7,6 +7,24 @@ import { CreatePlanDto } from 'src/dto/plan/createPlan.dto';
 @Controller('plan')
 export class PlanController {
   constructor(private readonly planService: PlanService) { }
+
+  /**
+   * 根据用户 ID 获取其所有计划
+   * @param req 请求对象
+   * @param userId 用户 ID
+   * @returns 计划列表
+   */
+  @Post('/get-plans')
+  async getPlans(@Req() req, @Query('userId') userId: number) {
+    const user = req?.user ?? null;
+    const currentUserId = user?.id ?? user?.userId ?? user?.sub;
+    if (!currentUserId) {
+      throw new UnauthorizedException('无法识别的用户');
+    }
+    userId = currentUserId
+    return this.planService.getPlansByUserId(userId);
+  }
+
   /**
    * 创建新攻略计划
    * @param req 请求对象
