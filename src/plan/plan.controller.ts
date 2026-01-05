@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Query, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { PlanService } from './plan.service';
 import { JwtAuthGuard } from 'src/user/auth/guards/jwt-auth.guard';
 import { CreatePlanDto } from 'src/dto/plan/createPlan.dto';
@@ -7,6 +7,24 @@ import { CreatePlanDto } from 'src/dto/plan/createPlan.dto';
 @Controller('plan')
 export class PlanController {
   constructor(private readonly planService: PlanService) { }
+
+  /**
+   * 根据用户 ID 获取其所有攻略计划
+   * @param req 请求对象
+   * @param userId 用户 ID
+   * @returns 攻略计划列表
+   */
+  @Get('/plan-list')
+  async GetPlanList(@Req() req, userId: number) {
+    const user = req?.user ?? null;
+    const _userId = user?.id ?? user?.userId ?? user?.sub;
+    userId = _userId;
+    if (!userId) {
+      throw new UnauthorizedException('无法识别的用户');
+    }
+    return this.planService.getPlanListByUserId(userId);
+  }
+
   /**
    * 创建新攻略计划
    * @param req 请求对象
