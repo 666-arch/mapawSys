@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePlanDto } from 'src/dto/plan/createPlan.dto';
 import { DailyPlanItem } from 'src/entity/daily-plan-item.entity';
@@ -79,9 +79,9 @@ export class PlanService {
             where: { id: planId },
             relations: ['user', 'dailyPlans'],
         });
-        if (!plan) return new NotFoundException('计划不存在');
-        if (plan.user.id !== userId) throw new NotFoundException('无权进行该操作');
-        if (plan.dailyPlans && plan.dailyPlans.length > 0) throw new NotFoundException('行程已生成，如需重生成请先删除');
+        if (!plan) return new BadRequestException('计划不存在');
+        if (plan.user.id !== userId) throw new UnauthorizedException('无权进行该操作');
+        if (plan.dailyPlans && plan.dailyPlans.length > 0) throw new BadRequestException('行程已生成，如需重生成请先删除');
 
         // 计划开始日期（如 2025-12-20）
         const planStartDate = plan.startTime ? new Date(plan.startTime) : new Date();
