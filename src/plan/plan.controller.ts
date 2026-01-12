@@ -73,8 +73,8 @@ export class PlanController {
    * @param planId 计划 ID
    * @returns 生成结果
    */
-  @Post('/create-daily-plan/:planId')
-  async createDailyPlay(@Req() req, planId: number) {
+  @Post('/create-daily-plan')
+  async createDailyPlay(@Req() req, @Query('planId') planId: number) {
     const user = req?.user ?? null;
     const userId = user?.id ?? user?.userId ?? user?.sub;
     if (!userId) {
