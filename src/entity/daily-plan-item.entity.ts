@@ -8,7 +8,7 @@ export class DailyPlanItem extends BaseContent {
     @Column({ length: 255 })
     place: string;
 
-    @Column({ length: 255 })
+    @Column({ length: 255, nullable: true })
     description: string | null;
 
     @Column({ name: 'start_time' })
